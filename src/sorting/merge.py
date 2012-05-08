@@ -8,59 +8,46 @@ Example merge sort
 from random import Random
 
     
-def merge_sort(left, right=None):
+def merge_sort(A):
     
-    if right == None:
-        mid = len(left) / 2
-        return merge_sort(left[:mid], left[mid:])
+    # handle len of 1
+    if len(A) == 1: return A
     
-    # handle no length
-    if not left: return right
-    if not right: return left
-    
-    # handle lengths of 1
-    if len(left) == len(right) == 1:
-        if left[0] > right[0]:
+    # handle lengths of 2
+    if len(A) == 2:
+        if A[0] > A[1]:
             # swap
-            return [right[0], left[0]]
-        # left and right sorted in order and length of 1 each so return as new array
-        return [left[0], right[0]]
+            return [A[1], A[0]]
+        # already sorted
+        return A
         
-    # split left and right and sort those
-    mid = (len(left) / 2) or 1
-    left = merge_sort(left[:mid], left[mid:])
+    # split left those
+    mid = (len(A) / 2) or 1
+    left = merge_sort(A[:mid])
+    right = merge_sort(A[mid:])
         
-    # split right and sort those
-    mid = (len(right) / 2) or 1
-    right = merge_sort(right[:mid], right[mid:])
-    
     # merge
+    return merge(left, right)
+
+def merge(left, right):
     A = []
-    for i in xrange(len(left) + len(right)):
-        l = None
-        r = None
-        
-        if len(left):
-            l = left[0]
-        else:
-            # no more left so append all of right
+    while len(left) or len(right):
+
+        if len(left) and len(right):
+            if left[0] <= right[0]:
+                A.append(left[0])
+                del left[0]
+            else:
+                A.append(right[0])
+                del right[0]
+        # look for end of left or right
+        if not len(left):
             A.extend(right)
-            return A
-        
-        if len(right):
-            r = right[0]
-        else:
-            # no more right
+            break
+        elif not len(right):
             A.extend(left)
-            return A
-            
-        # if left is smaller then put it next, otherwise r
-        if l <= r:
-            A.append(l)
-            del left[0]
-        else:
-            A.append(r)
-            del right[0]
+            break
+        
     return A
         
 
