@@ -8,6 +8,9 @@ the largest sum you can get by adding together numbers in non-adjacent indices
 from the array. I.e. you if you include the things stored in arr[i] in your sum,
 you can't include what is stored in arr[i-1] or arr[i+1]
 
+TODO:
+ways to optimize could be to remember ones we have added before for gaps and indexes that we have added before
+
 '''
 
 def largest_sum_non_adj(A):
