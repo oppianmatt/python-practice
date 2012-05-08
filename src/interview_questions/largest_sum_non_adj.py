@@ -19,15 +19,12 @@ def largest_sum_non_adj(A):
     '''
     maximum = 0
     # create an array to keep track of gaps
-    gap_array = [2] * ((len(A) / 2) + 1)
-    # set first gap to 0
-    gap_array[0] = 0
+    gap_array = [2] * (len(A) / 2)
                        
     # loop through until gap_array can't be "incremented"
     while gap_array:
-        # find the sum using gap_array
-        sum = find_sum(A, gap_array)
-        maximum = max(sum, maximum)
+        # find the sum using gap_array, try both offset 0 and 1
+        maximum = max(maximum, find_sum(A, gap_array), find_sum(A, gap_array, 1))
         # increment gap_array
         inc_gaps(gap_array)
         
@@ -42,14 +39,6 @@ def inc_gaps(gaps, overflow=3):
     index = 0
     gaps[index] += 1
     
-    # special case index = 0
-    if gaps[index] > 1:
-        gaps[index] = 0
-        index += 1
-        if index < len(gaps): gaps[index] += 1
-    
-    # this is the sum of gaps so we know when we reach the end we can pop off
-    # elements that would cause us to overflow
     # we have overflowed
     while index < len(gaps) and gaps[index] > overflow:
         # go back to 2
@@ -65,13 +54,14 @@ def inc_gaps(gaps, overflow=3):
         gaps[:] = []
     
 
-def find_sum(A, gaps):
+def find_sum(A, gaps, offset=0):
     '''
     Loop through A but use the gaps list as a list to specify which index to
     goto next
     '''
-    sum = 0
-    index = 0
+    index = offset
+    # start with first element
+    sum = A[index]
     for gap in gaps:
         # increment the index by the next gap amount
         index += gap
@@ -105,6 +95,8 @@ class Test(unittest.TestCase):
         self.assertEquals(39, largest_sum_non_adj(A))
         A = [1, 2, 3, 4, 5, 15, 7, 8, 20, 10]
         self.assertEquals(41, largest_sum_non_adj(A))
+        A = [1, 2, 100, 4, 5, 100, 7, 8, 100, 10]
+        self.assertEquals(301, largest_sum_non_adj(A))
         
 
 if __name__ == "__main__":
